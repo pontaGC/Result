@@ -86,15 +86,73 @@ namespace Results
         /// <param name="message">The log message.</param>
         /// <param name="severity">The log severity.</param>
         /// <param name="exception">The exception.</param>
-        /// <param name="additionalData">The additonal data.</param>
         /// <returns>The self.</returns>
         public Result AddErrors(
             string message,
             Severity severity = Severity.Error,
-            Exception exception = null,
-            object additionalData = null)
+            Exception exception = null)
         {
-            return AddErrors(new ErrorLog(severity, message, additionalData, exception));
+            return AddErrors(new ErrorLog(severity, message, exception));
+        }
+
+        /// <summary>
+        /// Adds the warning logs.
+        /// </summary>
+        /// <param name="messages">The log messages to add.</param>
+        /// <returns>The self.</returns>
+        public Result AddWarnings(IEnumerable<string> messages)
+        {
+            if (messages is null)
+            {
+                return this;
+            }
+
+            foreach(var message in messages)
+            {
+                this.allLogs.Add(new Log(Severity.Warning, message));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the warning log.
+        /// </summary>
+        /// <param name="message">The log message.</param>
+        /// <returns>The self.</returns>
+        public Result AddWarnings(string message)
+        {
+            return AddLogs(new Log(Severity.Warning, message));
+        }
+
+        /// <summary>
+        /// Adds the information log.
+        /// </summary>
+        /// <param name="message">The log message.</param>
+        /// <returns>The self.</returns>
+        public Result AddInformations(string message)
+        {
+            return AddLogs(new Log(Severity.Information, message));
+        }
+
+        /// <summary>
+        /// Adds the information logs.
+        /// </summary>
+        /// <param name="messages">The log messages to add.</param>
+        /// <returns>The self.</returns>
+        public Result AddInformations(IEnumerable<string> messages)
+        {
+            if (messages is null)
+            {
+                return this;
+            }
+
+            foreach (var message in messages)
+            {
+                this.allLogs.Add(new Log(Severity.Information, message));
+            }
+
+            return this;
         }
 
         /// <summary>
