@@ -6,3 +6,6 @@
 /src/.vs
 /src/Results/bin/Debug/net6.0
 /src/Results/obj
+/src/Results.Test/.vs/Results.Test
+/src/Results.Test/Results.Test/bin/Debug/net6.0
+/src/Results.Test/Results.Test/obj
