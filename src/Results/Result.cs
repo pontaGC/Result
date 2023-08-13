@@ -81,6 +81,23 @@ namespace Results
         }
 
         /// <summary>
+        /// Adds the error log.
+        /// </summary>
+        /// <param name="message">The log message.</param>
+        /// <param name="severity">The log severity.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="additionalData">The additonal data.</param>
+        /// <returns>The self.</returns>
+        public Result AddErrors(
+            string message,
+            Severity severity = Severity.Error,
+            Exception exception = null,
+            object additionalData = null)
+        {
+            return AddErrors(new ErrorLog(severity, message, additionalData, exception));
+        }
+
+        /// <summary>
         /// Adds the logs.
         /// </summary>
         /// <param name="logs">The logs to add.</param>
