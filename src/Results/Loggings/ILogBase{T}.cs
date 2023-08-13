@@ -1,4 +1,6 @@
-﻿namespace Results.Loggings
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Results.Loggings
 {
     /// <summary>
     /// The base of result log.
@@ -14,6 +16,7 @@
         /// <summary>
         /// Gets an additional data to know the log for detail.
         /// </summary>
+        [MaybeNull]
         object AddtinalData { get; }
     }
 }
