@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Results.Loggings;
+﻿using Results.Loggings;
 
 namespace Results
 {
@@ -8,32 +6,24 @@ namespace Results
     /// The result.
     /// </summary>
     /// <typeparam name="T">The type of the <c>Value</c> obtained as an action result.</typeparam>
-    public class Result<T> : ResultBase<T>
-    {
+    public class Result<T> : Result, IResult<T>
+    {   
+        // Inherits Result to be able to cast Result<T> to Result.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Result{T}"/> class.
         /// </summary>
         /// <param name="isSuccess">The value indicating the result is successful.</param>
         protected Result(bool isSuccess, T value)
+            : base (isSuccess)
         {
-            IsSuccess = isSuccess;
-            Value = value;
+            this.Value = value;
         }
 
         #region Properties
 
         /// <inheritdoc />
-        public override T Value { get; }
-
-        /// <inheritdoc />
-        [NotNull]
-        public override IEnumerable<ILog> AllLogs => allLogs;
-
-        /// <summary>
-        /// Gets a substance of the <c>AllLogs</c>.
-        /// </summary>
-        [NotNull]
-        protected List<ILog> allLogs { get; } = new List<ILog>();
+        public T Value { get; }
 
         #endregion
 
@@ -52,7 +42,7 @@ namespace Results
         /// <summary>
         /// Creates an instance as a failure result.
         /// </summary>
-        /// <param name="value">The value. This is optinal.</param>
+        /// <param name="value">The value. It is optinal.</param>
         /// <returns>The new instance.</returns>
         public static Result<T> Failed(T value = default)
         {
@@ -68,19 +58,21 @@ namespace Results
         /// </summary>
         /// <param name="errors">The error logs to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddErrors(IEnumerable<IErrorLog> errors)
+        public new Result<T> AddErrors(IEnumerable<IErrorLog> errors)
         {
-            return AddLogs(errors);
+            var _ = base.AddErrors(errors);
+            return this;
         }
 
         /// <summary>
-        /// Adds the error log.
+        /// Adds the error log if both of the log message and exception are <c>null</c>.
         /// </summary>
         /// <param name="error">The error log to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddErrors(IErrorLog error)
+        public new Result<T> AddErrors(IErrorLog error)
         {
-            return AddLogs(error);
+            var _ = base.AddErrors(error);
+            return this;
         }
 
         /// <summary>
@@ -90,31 +82,23 @@ namespace Results
         /// <param name="severity">The log severity.</param>
         /// <param name="exception">The exception.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddErrors(
+        public new Result<T> AddErrors(
             string message,
             Severity severity = Severity.Error,
             Exception exception = null)
         {
-            return AddErrors(new ErrorLog(severity, message, exception));
+            var _ = base.AddErrors(message, severity, exception);
+            return this;
         }
 
         /// <summary>
-        /// Adds the warning logs.
+        /// Adds the warning logs if the log message is not <c>null</c>.
         /// </summary>
         /// <param name="messages">The log messages to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddWarnings(IEnumerable<string> messages)
+        public new Result<T> AddWarnings(IEnumerable<string> messages)
         {
-            if (messages is null)
-            {
-                return this;
-            }
-
-            foreach (var message in messages)
-            {
-                this.allLogs.Add(new Log(Severity.Warning, message));
-            }
-
+            var _ = base.AddWarnings(messages);
             return this;
         }
 
@@ -123,19 +107,21 @@ namespace Results
         /// </summary>
         /// <param name="message">The log message.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddWarnings(string message)
+        public new Result<T> AddWarnings(string message)
         {
-            return AddLogs(new Log(Severity.Warning, message));
+            var _ = base.AddWarnings(message);
+            return this;
         }
 
         /// <summary>
-        /// Adds the information log.
+        /// Adds the information log if the log message is not <c>null</c>.
         /// </summary>
         /// <param name="message">The log message.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddInformations(string message)
+        public new Result<T> AddInformations(string message)
         {
-            return AddLogs(new Log(Severity.Information, message));
+            var _ = base.AddInformations(message);
+            return this;
         }
 
         /// <summary>
@@ -143,18 +129,9 @@ namespace Results
         /// </summary>
         /// <param name="messages">The log messages to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddInformations(IEnumerable<string> messages)
+        public new Result<T> AddInformations(IEnumerable<string> messages)
         {
-            if (messages is null)
-            {
-                return this;
-            }
-
-            foreach (var message in messages)
-            {
-                this.allLogs.Add(new Log(Severity.Information, message));
-            }
-
+            var _ = base.AddInformations(messages);
             return this;
         }
 
@@ -163,14 +140,9 @@ namespace Results
         /// </summary>
         /// <param name="logs">The logs to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddLogs(IEnumerable<ILog> logs)
+        public new Result<T> AddLogs(IEnumerable<ILog> logs)
         {
-            if (logs is null)
-            {
-                return this;
-            }
-
-            allLogs.AddRange(logs);
+            var _ = base.AddLogs(logs);
             return this;
         }
 
@@ -179,14 +151,9 @@ namespace Results
         /// </summary>
         /// <param name="log">The log to add.</param>
         /// <returns>The self.</returns>
-        public Result<T> AddLogs(ILog log)
+        public new Result<T> AddLogs(ILog log)
         {
-            if (log is null)
-            {
-                return this;
-            }
-
-            allLogs.Add(log);
+            var _ = base.AddLogs(log);
             return this;
         }
 

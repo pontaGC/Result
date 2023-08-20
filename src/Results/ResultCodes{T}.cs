@@ -28,7 +28,7 @@ namespace Results
         public bool IsFailed => !this.IsSuccess;
 
         /// <inheritdoc />
-        public bool HasException => Exception != null;
+        public bool HasException => this.Exception != null;
 
         /// <inheritdoc />
         [MaybeNull]
@@ -36,11 +36,11 @@ namespace Results
 
         /// <inheritdoc />
         [NotNull]
-        public IEnumerable<TCode> Codes => Resultcodes;
+        public IEnumerable<TCode> Codes => this.Resultcodes;
 
         /// <inheritdoc />
         [NotNull]
-        public IReadOnlyDictionary<TCode, object> AdditionalData => EditableAdditionalData;
+        public IReadOnlyDictionary<string, object> AdditionalData => this.AdditionalDataInternal;
 
         /// <summary>
         /// Gets a substance of the <c>Codes</c>.
@@ -52,12 +52,7 @@ namespace Results
         /// Gets a substance of the <c>AdditionalData</c>.
         /// </summary>
         [NotNull]
-        protected Dictionary<TCode, object> EditableAdditionalData { get; } = new Dictionary<TCode, object>();
-
-        /// <summary>
-        /// Gets a void value.
-        /// </summary>
-        public ResultVoidType Value => ResultVoidType.Instance;
+        protected Dictionary<string, object> AdditionalDataInternal { get; } = new Dictionary<string, object>();
 
         #endregion
 
@@ -134,20 +129,20 @@ namespace Results
         /// <param name="key">The key to look up the additional data.</param>
         /// <param name="value">The additional data.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode> AddAdditionalData(TCode key, object value)
+        public ResultCodes<TCode> AddAdditionalData(string key, object value)
         {
             if (key is null)
             {
                 return this;
             }
 
-            if (EditableAdditionalData.ContainsKey(key))
+            if (AdditionalDataInternal.ContainsKey(key))
             {
-                EditableAdditionalData[key] = value;
+                AdditionalDataInternal[key] = value;
             }
             else
             {
-                EditableAdditionalData.Add(key, value);
+                AdditionalDataInternal.Add(key, value);
             }
 
             return this;
@@ -164,53 +159,22 @@ namespace Results
     /// The result codes.
     /// </summary>
     /// <typeparam name="TCode">The type of the result code.</typeparam>
-    public class ResultCodes<TCode, TValue> : IResultCodes<TCode, TValue>
+    public class ResultCodes<TCode, TValue> : ResultCodes<TCode>, IResultCodes<TCode, TValue>
     {
+        // Inherits ResultCodes<TCode> to be able to cast Result<TCode, TValue> to Result<TCode>.
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultCodes{TCode, TValue}"/> class.
         /// </summary>
         /// <param name="isSuccess">The value indicating the result is successful.</param>
         /// <param name="value">The value obtained as a result.</param>
         protected ResultCodes(bool isSuccess, TValue value) 
+            : base(isSuccess)
         {
-            this.IsSuccess = isSuccess;
             this.Value = value;
         }
 
         #region Properties
-
-        /// <inheritdoc />
-        public bool IsSuccess { get; }
-
-        /// <inheritdoc />
-        public bool IsFailed => !this.IsSuccess;
-
-        /// <inheritdoc />
-        public bool HasException => Exception != null;
-
-        /// <inheritdoc />
-        [MaybeNull]
-        public Exception Exception { get; protected set; }
-
-        /// <inheritdoc />
-        [NotNull]
-        public IEnumerable<TCode> Codes => Resultcodes;
-
-        /// <inheritdoc />
-        [NotNull]
-        public IReadOnlyDictionary<TCode, object> AdditionalData => EditableAdditionalData;
-
-        /// <summary>
-        /// Gets a substance of the <c>Codes</c>.
-        /// </summary>
-        [NotNull]
-        protected List<TCode> Resultcodes { get; } = new List<TCode>();
-
-        /// <summary>
-        /// Gets a substance of the <c>AdditionalData</c>.
-        /// </summary>
-        [NotNull]
-        protected Dictionary<TCode, object> EditableAdditionalData { get; } = new Dictionary<TCode, object>();
 
         /// <inheritdoc />
         public TValue Value { get; }
@@ -248,14 +212,9 @@ namespace Results
         /// </summary>
         /// <param name="codes">The result codes to add.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode, TValue> AddCodes(IEnumerable<TCode> codes)
+        public new ResultCodes<TCode, TValue> AddCodes(IEnumerable<TCode> codes)
         {
-            if (codes is null)
-            {
-                return this;
-            }
-
-            Resultcodes.AddRange(codes);
+            var _ = base.AddCodes(codes);
             return this;
         }
 
@@ -264,14 +223,9 @@ namespace Results
         /// </summary>
         /// <param name="code">The result code to add.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode, TValue> AddCodes(TCode code)
+        public new ResultCodes<TCode, TValue> AddCodes(TCode code)
         {
-            if (code is null)
-            {
-                return this;
-            }
-
-            Resultcodes.Add(code);
+            var _ = base.AddCodes(code);
             return this;
         }
         
@@ -280,9 +234,9 @@ namespace Results
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode, TValue> WithException(Exception exception)
+        public new ResultCodes<TCode, TValue> WithException(Exception exception)
         {
-            Exception = exception;
+            var _ = base.WithException(exception);
             return this;
         }
 
@@ -292,22 +246,9 @@ namespace Results
         /// <param name="key">The key to look up the additional data.</param>
         /// <param name="value">The additional data.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode, TValue> AddAdditionalData(TCode key, object value)
+        public new ResultCodes<TCode, TValue> AddAdditionalData(string key, object value)
         {
-            if (key is null)
-            {
-                return this;
-            }
-
-            if (EditableAdditionalData.ContainsKey(key))
-            {
-                EditableAdditionalData[key] = value;
-            }
-            else
-            {
-                EditableAdditionalData.Add(key, value);
-            }
-
+            var _ = base.AddAdditionalData(key, value);
             return this;
         }
 

@@ -6,16 +6,20 @@ namespace Results
     /// The result.
     /// </summary>
     /// <typeparam name="TCode">The type of the result code.</typeparam>
-    public interface IResultCodes<TCode> : IResultCodes<TCode, ResultVoidType>
+    /// <typeparam name="TValue">The type of <c>Value</c> obtained as a result.</typeparam>
+    public interface IResultCodes<TCode, TValue> : IResultCodes<TCode>
     {
+        /// <summary>
+        /// Gets a value obtained as a action result.
+        /// </summary>
+        TValue Value { get; }
     }
 
     /// <summary>
     /// The result.
     /// </summary>
     /// <typeparam name="TCode">The type of the result code.</typeparam>
-    /// <typeparam name="TValue">The type of <c>Value</c> obtained as a result.</typeparam>
-    public interface IResultCodes<TCode, TValue>
+    public interface IResultCodes<TCode>
     {
         /// <summary>
         /// Gets a value indicating whether or not the result is success.
@@ -51,10 +55,6 @@ namespace Results
         /// Gets the additional data.
         /// </summary>
         [NotNull]
-        IReadOnlyDictionary<TCode, object> AdditionalData { get; }
-        /// <summary>
-        /// Gets a value obtained as an action result.
-        /// </summary>
-        TValue Value { get; }
+        IReadOnlyDictionary<string, object> AdditionalData { get; }
     }
 }

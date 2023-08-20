@@ -1,12 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Results.Loggings;
 
-using Results.Loggings;
 namespace Results
 {
     /// <summary>
     /// The result.
     /// </summary>
-    public class Result : ResultBase<ResultVoidType>
+    public class Result : ResultBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
@@ -14,27 +13,8 @@ namespace Results
         /// <param name="isSuccess">The value indicating the result is successful.</param>
         protected Result(bool isSuccess)
         {
-            IsSuccess = isSuccess;
+            this.IsSuccess = isSuccess;
         }
-
-        #region Properties
-
-        /// <inheritdoc />
-        [NotNull]
-        public override IEnumerable<ILog> AllLogs => allLogs;
-
-        /// <summary>
-        /// Gets a void value.
-        /// </summary>
-        public override ResultVoidType Value => ResultVoidType.Instance;
-
-        /// <summary>
-        /// Gets a substance of the <c>AllLogs</c>.
-        /// </summary>
-        [NotNull]
-        protected List<ILog> allLogs { get; } = new List<ILog>();
-
-        #endregion
 
         #region Create instance
 
@@ -67,7 +47,7 @@ namespace Results
         /// <returns>The self.</returns>
         public Result AddErrors(IEnumerable<IErrorLog> errors)
         {
-            return AddLogs(errors);
+            return this.AddLogs(errors);
         }
 
         /// <summary>
@@ -77,11 +57,11 @@ namespace Results
         /// <returns>The self.</returns>
         public Result AddErrors(IErrorLog error)
         {
-            return AddLogs(error);
+            return this.AddLogs(error);
         }
 
         /// <summary>
-        /// Adds the error log.
+        /// Adds the error log if both of the log message and exception are <c>null</c>.
         /// </summary>
         /// <param name="message">The log message.</param>
         /// <param name="severity">The log severity.</param>
@@ -92,7 +72,12 @@ namespace Results
             Severity severity = Severity.Error,
             Exception exception = null)
         {
-            return AddErrors(new ErrorLog(severity, message, exception));
+            if (message is null && exception is null)
+            {
+                return this;
+            }
+
+            return this.AddErrors(new ErrorLog(severity, message, exception));
         }
 
         /// <summary>
@@ -109,30 +94,40 @@ namespace Results
 
             foreach(var message in messages)
             {
-                this.allLogs.Add(new Log(Severity.Warning, message));
+                this.AddWarnings(message);
             }
 
             return this;
         }
 
         /// <summary>
-        /// Adds the warning log.
+        /// Adds the warning log if the log message is not <c>null</c>.
         /// </summary>
         /// <param name="message">The log message.</param>
         /// <returns>The self.</returns>
         public Result AddWarnings(string message)
         {
-            return AddLogs(new Log(Severity.Warning, message));
+            if (message is null)
+            {
+                return this;
+            }
+
+            return this.AddLogs(new Log(Severity.Warning, message));
         }
 
         /// <summary>
-        /// Adds the information log.
+        /// Adds the information log if the log message is <c>null</c>.
         /// </summary>
         /// <param name="message">The log message.</param>
         /// <returns>The self.</returns>
         public Result AddInformations(string message)
         {
-            return AddLogs(new Log(Severity.Information, message));
+            if (message is null)
+            {
+                return this;
+            }
+
+            return this.AddLogs(new Log(Severity.Information, message));
         }
 
         /// <summary>
@@ -149,7 +144,7 @@ namespace Results
 
             foreach (var message in messages)
             {
-                this.allLogs.Add(new Log(Severity.Information, message));
+                this.AddInformations(message);
             }
 
             return this;
@@ -167,7 +162,7 @@ namespace Results
                 return this;
             }
 
-            allLogs.AddRange(logs);
+            this.allLogs.AddRange(logs);
             return this;
         }
 
@@ -183,7 +178,7 @@ namespace Results
                 return this;
             }
 
-            allLogs.Add(log);
+            this.allLogs.Add(log);
             return this;
         }
 
