@@ -85,7 +85,7 @@ namespace Results
         /// </summary>
         /// <param name="codes">The result codes to add.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode> AddCodes(IEnumerable<TCode> codes)
+        public ResultCodes<TCode> AddCode(IEnumerable<TCode> codes)
         {
             if (codes is null)
             {
@@ -101,7 +101,7 @@ namespace Results
         /// </summary>
         /// <param name="code">The result code to add.</param>
         /// <returns>The self.</returns>
-        public ResultCodes<TCode> AddCodes(TCode code)
+        public ResultCodes<TCode> AddCode(TCode code)
         {
             if (code is null)
             {
@@ -212,9 +212,9 @@ namespace Results
         /// </summary>
         /// <param name="codes">The result codes to add.</param>
         /// <returns>The self.</returns>
-        public new ResultCodes<TCode, TValue> AddCodes(IEnumerable<TCode> codes)
+        public new ResultCodes<TCode, TValue> AddCode(IEnumerable<TCode> codes)
         {
-            var _ = base.AddCodes(codes);
+            var _ = base.AddCode(codes);
             return this;
         }
 
@@ -223,9 +223,9 @@ namespace Results
         /// </summary>
         /// <param name="code">The result code to add.</param>
         /// <returns>The self.</returns>
-        public new ResultCodes<TCode, TValue> AddCodes(TCode code)
+        public new ResultCodes<TCode, TValue> AddCode(TCode code)
         {
-            var _ = base.AddCodes(code);
+            var _ = base.AddCode(code);
             return this;
         }
         
