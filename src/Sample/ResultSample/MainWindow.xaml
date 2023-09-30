@@ -1,0 +1,56 @@
+﻿<Window x:Class="ResultSample.MainWindow"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:log="clr-namespace:Results.Loggings;assembly=Results"
+        xmlns:local="clr-namespace:ResultSample"
+        mc:Ignorable="d"
+        Title="Result Sample"
+        WindowStartupLocation="CenterScreen"
+        Height="300" Width="400"        
+        MinWidth="300"
+        MinHeight="300"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}">
+    <Window.Resources>
+        <local:LogSeverityImageUriConverter x:Key="LogSeverityImageUriConverter" />
+
+        <Style x:Key="CommonButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <DataTemplate x:Key="LogItemTemplate" DataType="{x:Type log:ILog}">
+            <StackPanel Orientation="Horizontal">
+                <Image Margin="1"
+                       Source="{Binding Severity, Converter={StaticResource LogSeverityImageUriConverter}}"                      
+                       Stretch="Fill" />
+                <TextBlock Text="{Binding Message, Mode=OneWay}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0"
+                  MinWidth="250"
+                  MinHeight="200"
+                  MaxHeight="200"
+                  ItemTemplate="{StaticResource LogItemTemplate}"
+                  ItemsSource="{Binding Logs, Mode=OneTime}" />
+        
+        <UniformGrid Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                     Columns="2">
+            <Button Content="Execute"
+                    Style="{StaticResource CommonButtonStyle}"
+                    Command="{Binding ExecuteCommand, Mode=OneTime}" />
+            <Button Content="Clear"
+                    Style="{StaticResource CommonButtonStyle}"
+                    Command="{Binding ClearLogsCommand, Mode=OneTime}" />
+        </UniformGrid>
+    </Grid>
+</Window>

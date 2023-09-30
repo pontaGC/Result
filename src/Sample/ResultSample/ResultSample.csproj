@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="VisualStudioImages\StatusError.png" />
+    <None Remove="VisualStudioImages\StatusInformation.png" />
+    <None Remove="VisualStudioImages\StatusWarning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Results\Results.csproj" />
+    <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="VisualStudioImages\StatusError.png" />
+    <Resource Include="VisualStudioImages\StatusInformation.png" />
+    <Resource Include="VisualStudioImages\StatusWarning.png" />
+  </ItemGroup>
+
+</Project>

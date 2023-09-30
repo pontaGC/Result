@@ -9,3 +9,8 @@
 /src/Results.Test/.vs/Results.Test
 /src/Results.Test/Results.Test/bin/Debug/net6.0
 /src/Results.Test/Results.Test/obj
+/src/Results.Test/.vs/ProjectEvaluation
+/src/Sample/ResultSample/bin/Debug/net6.0-windows
+/src/Sample/ResultSample/obj
+/src/Sample/SharedLibrary/bin/Debug/net6.0
+/src/Sample/SharedLibrary/obj
